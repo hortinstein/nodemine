@@ -1,0 +1,26 @@
+{
+  "name": "nodemine",
+  "version": "0.0.0",
+  "description": "simple monitor script for my raspberry pi minepeon miner",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hortinstein/nodemine.git"
+  },
+  "keywords": [
+    "minepeon",
+    "bitcoin"
+  ],
+  "author": "hortinstein",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/hortinstein/nodemine/issues"
+  },
+  "dependencies": {
+    "uptimed": "~1.1.2",
+    "clear": "0.0.1"
+  }
+}

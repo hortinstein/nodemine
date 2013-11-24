@@ -12,5 +12,5 @@ function uptimes() {
     hours = parseInt((seconds % 86400) / 3600);
     minutes = parseInt((seconds % 3600) / 60);
     seconds =  seconds % 60;
-    console.log('Uptime Days:'+days+' Hours:'+hours+' Min:'+minutes+' Sec:'+seconds);
+    console.log('uptime days:'+days+' hours:'+hours+' min:'+minutes+' sec:'+seconds);
 }

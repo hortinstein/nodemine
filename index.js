@@ -60,11 +60,12 @@ var refresh = function (){
 	console.log('kintaro miner');
 	printUptime();
 	//terminal.colorize('%2');
-	console.log(btcGuild);
+	console.log('rate: '+btcGuild.worker+' MH/S');
+	console.log('earned: '+btcGuild.total+' BTC');
 	//terminal.colorize('%3');
-	console.log(goxData);
+	console.log("price per coin: "+ goxData.last);
 	//terminal.colorize('%0');
-	console.log(rateData);
+	console.log(rateData.dollars_per_day+"/day, "+rateData.total_earned+" total");
 };
 ////////////////////////////////////////////////////////
 setInterval(btcGUpdate,16000);

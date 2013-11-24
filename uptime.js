@@ -1,9 +1,9 @@
-module.exports = uptime;
+module.exports = uptimes;
 
 uptimed = require('uptimed');
+os = require('os');
 
-
-function uptime() {
+function uptimes() {
 
     var hours,days,minutes,seconds;
     var data = {};

@@ -21,6 +21,9 @@
   },
   "dependencies": {
     "uptimed": "~1.1.2",
-    "clear": "0.0.1"
+    "request": "~2.27.0",
+    "mtgox-orderbook": "~0.4.0",
+    "colorize": "~0.1.0",
+    "color-terminal": "0.0.3-4"
   }
 }

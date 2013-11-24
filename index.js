@@ -61,10 +61,13 @@ var refresh = function (){
 	printUptime();
 	//terminal.colorize('%2');
 	console.log('rate: '+btcGuild.worker+' MH/S');
+	console.log('earning: '+rateData.coins_per_day+' BTC/day');
 	console.log('earned: '+btcGuild.total+' BTC');
 	//terminal.colorize('%3');
+	console.log('---------------------------');
 	console.log("price per coin: "+ goxData.last);
 	//terminal.colorize('%0');
+	             
 	console.log(rateData.dollars_per_day+"/day, "+rateData.total_earned+" total");
 };
 ////////////////////////////////////////////////////////

@@ -39,9 +39,13 @@ var btcGUpdate = function (apiKey) {
 	var url = "https://www.btcguild.com/api.php?api_key="+config.apiKey;
 	request({url:url, json:true}, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            btcGuild.total = body.user.total_rewards;
-            btcGuild['24h'] = body.user.past_24h_rewards;
-            btcGuild.difficulty = body.pool.difficulty;
+            try{
+                btcGuild.total = body.user.total_rewards;
+                btcGuild['24h'] = body.user.past_24h_rewards;
+                btcGuild.difficulty = body.pool.difficulty;
+            } catch (e){
+                btcGuild = {};
+            }
             try{
                 btcGuild.worker = body.workers[1].hash_rate;	
                 calcRate(btcGuild.worker);
@@ -71,5 +75,5 @@ var refresh = function (){
 	console.log(rateData.dollars_per_day+"/day, "+rateData.total_earned+" total");
 };
 ////////////////////////////////////////////////////////
-setInterval(btcGUpdate,16000);
+setInterval(btcGUpdate,20000);
 setInterval(refresh,10000);

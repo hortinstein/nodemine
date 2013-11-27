@@ -23,6 +23,7 @@
     "uptimed": "~1.1.2",
     "request": "~2.27.0",
     "mtgox-orderbook": "~0.4.0",
-    "color-terminal": "0.0.3-4"
+    "color-terminal": "0.0.3-4",
+    "time": "~0.10.0"
   }
 }

@@ -8,7 +8,11 @@ var mtgox    = require('mtgox-orderbook');
 var btcGuild={};
 var goxData = {};
 var rateData = {};
+var minerLog = {};
+
 ////////////////////////////////////////////////////////
+//Function that is responsible for updating the gox price
+//
 mtgox.on('ticker', function(ticker){
 	//goxData.high = ticker.high.display_short;
 	//goxData.low = ticker.low.display_short;
@@ -18,12 +22,15 @@ mtgox.on('ticker', function(ticker){
 mtgox.connect('usd');
 
 ////////////////////////////////////////////////////////
-
+//Function used to clear the screen, niaive way to update
+//
 var clear = function () {
 	console.log('\033c');
 };
-////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////
+//Function that calculates the rates based on API data, called by btcGuild update 
+//
 var calcRate = function	(hashrate) {
 	var url = 'http://www.alloscomp.com/bitcoin/calculator/json?hashrate='+(hashrate*1000000);
 	request({url:url}, function (error, response, body) {
@@ -34,7 +41,10 @@ var calcRate = function	(hashrate) {
 	});
 
 };
+
 ////////////////////////////////////////////////////////
+//Pulls information from BTC API
+//
 var btcGUpdate = function (apiKey) {
 	var url = "https://www.btcguild.com/api.php?api_key="+config.apiKey;
 	request({url:url, json:true}, function (error, response, body) {
@@ -56,6 +66,23 @@ var btcGUpdate = function (apiKey) {
         }
 	});
 };
+
+
+////////////////////////////////////////////////////////
+//Function that pushes to iris couch used for logging
+//
+var pushLog = function (){
+    var rawlog = {}; //this will contain the btcGuild,goxData and rateData 
+    rawlog.milliseconds = (new Date).getTime();
+    rawlong.datestring = Date().valueOf();
+    try{
+        rawlog.btcGuild = btcGuild;
+        rawlog.goxData = goxData;
+        rawlog.rateData = rateData;
+    } catch (e){
+        
+    }
+}
 
 ////////////////////////////////////////////////////////
 var refresh = function (){

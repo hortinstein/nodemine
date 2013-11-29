@@ -40,7 +40,10 @@ mtgox.on('ticker', function(ticker){
 	goxData.last = ticker.last.display_short;
 	goxData.last_num = ticker.last.value;
 });
-mtgox.connect('usd');
+mtgox.connect('usd');	
+mtgox.on('disconnect', function(){
+	mtgox.connect('usd');	
+})
 
 ////////////////////////////////////////////////////////
 //Function used to clear the screen, niaive way to update
@@ -108,19 +111,16 @@ var btcGUpdate = function (apiKey) {
 //Function that pushes to iris couch used for logging
 //
 var pushLog = function (){
-    console.log(minerLog);
-    var couch_host = 'http://' + config.couch_host + ':' + config.couch_port
-    var nano = require('nano')(couch_host)
-      , username = config.username
-      , userpass = config.password
-      , callback = console.log // this would normally be some callback
-      , cookies  = {} // store cookies, normally redis or something
-      , database_name = config.couch_db_name;
-    var db = nano.db.use(config.couch_location);
+	a = new Date();
+	minerLog.timestamp = JSON.stringify(a);
+    var couch_host = config.couch_host;
+    var nano = require('nano')(config.couch_host)
+      
+    var db = nano.db.use(config.couch_db_name);
 
-    client.insert(minerLog, (new Date).getTime(), function(e, body){
+    db.insert(minerLog, (new Date).getTime(), function(e, body){
 		if (e) { 
-			console.log('ERROR LOGGING'+e);
+			console.log('ERROR LOGGING: '+e);
 		} else {
 			console.log("logged successfully");
         }
@@ -147,4 +147,4 @@ var refresh = function (){
 ////////////////////////////////////////////////////////
 setInterval(btcGUpdate,25*SEC);
 setInterval(refresh,10*SEC);
-//setInterval(pushLog,10*SEC);//5*MIN);
+setInterval(pushLog,5*MIN);//logs every five min

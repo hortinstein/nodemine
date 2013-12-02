@@ -149,6 +149,7 @@ var refresh = function (){
 ////////////////////////////////////////////////////////
 setupTicker();
 refresh();
+btcGUpdate();
 setInterval(setupTicker,10*MIN);
 setInterval(btcGUpdate,45*SEC);
 setInterval(refresh,10*SEC);

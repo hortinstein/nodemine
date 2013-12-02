@@ -33,17 +33,19 @@ function printUptime() {
 ////////////////////////////////////////////////////////
 //Function that is responsible for updating the gox price
 //
-mtgox.on('ticker', function(ticker){
-	minerLog.goxData = ticker;
-	goxData.high = ticker.high.display_short;
-	goxData.low = ticker.low.display_short;
-	goxData.last = ticker.last.display_short;
-	goxData.last_num = ticker.last.value;
-});
-mtgox.connect('usd');	
-mtgox.on('disconnect', function(){
+var setupTicker = function (){
+	mtgox.on('ticker', function(ticker){
+		minerLog.goxData = ticker;
+		goxData.high = ticker.high.display_short;
+		goxData.low = ticker.low.display_short;
+		goxData.last = ticker.last.display_short;
+		goxData.last_num = ticker.last.value;
+	});
 	mtgox.connect('usd');	
-})
+	mtgox.on('disconnect', function(){
+		mtgox.connect('usd');	
+	});	
+} 
 
 ////////////////////////////////////////////////////////
 //Function used to clear the screen, niaive way to update
@@ -145,6 +147,9 @@ var refresh = function (){
 	console.log(rateData.dollars_per_day+"/day, "+rateData.total_earned+" total");
 };
 ////////////////////////////////////////////////////////
-setInterval(btcGUpdate,25*SEC);
+setupTicker();
+refresh();
+setInterval(setupTicker,10*MIN);
+setInterval(btcGUpdate,45*SEC);
 setInterval(refresh,10*SEC);
 setInterval(pushLog,5*MIN);//logs every five min

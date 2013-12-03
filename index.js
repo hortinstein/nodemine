@@ -4,7 +4,7 @@ var uptimed = require('uptimed');
 os = require('os');
 var request = require('request');
 var terminal = require('color-terminal');
-var mtgox    = require('mtgox-orderbook');
+
 
 var btcGuild={};
 var goxData = {};
@@ -34,6 +34,8 @@ function printUptime() {
 //Function that is responsible for updating the gox price
 //
 var setupTicker = function (){
+    var mtgox = {};
+    var mtgox    = require('mtgox-orderbook');
 	mtgox.on('ticker', function(ticker){
 		minerLog.goxData = ticker;
 		goxData.high = ticker.high.display_short;
@@ -87,9 +89,9 @@ var btcGUpdate = function (apiKey) {
 	var url = "https://www.btcguild.com/api.php?api_key="+config.api_key;
 	request({url:url, json:true}, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-        	//storing complete json to sync to log
+            //storing complete json to sync to log
 			minerLog.btcGuild = body;
-        	//
+            //
             try{
                 btcGuild.total = body.user.total_rewards;
                 btcGuild['24h'] = body.user.past_24h_rewards;
@@ -113,7 +115,7 @@ var btcGUpdate = function (apiKey) {
 //Function that pushes to iris couch used for logging
 //
 var pushLog = function (){
-	a = new Date();
+	var a = new Date();
 	minerLog.timestamp = JSON.stringify(a);
     var couch_host = config.couch_host;
     var nano = require('nano')(config.couch_host)
@@ -147,10 +149,12 @@ var refresh = function (){
 	console.log(rateData.dollars_per_day+"/day, "+rateData.total_earned+" total");
 };
 ////////////////////////////////////////////////////////
+
+
 setupTicker();
 refresh();
 btcGUpdate();
-setInterval(setupTicker,10*MIN);
+setInterval(setupTicker,1*HOUR);
 setInterval(btcGUpdate,45*SEC);
 setInterval(refresh,10*SEC);
 setInterval(pushLog,5*MIN);//logs every five min

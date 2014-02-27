@@ -7,7 +7,7 @@ var terminal = require('color-terminal');
 
 
 var btcGuild={};
-var goxData = {};
+var blockchainData = {};
 var rateData = {};
 var minerLog = {};
 var uptime=0;
@@ -31,22 +31,23 @@ function printUptime() {
 }
 
 ////////////////////////////////////////////////////////
-//Function that is responsible for updating the gox price
+//Function that is responsible for updating the btc price (pulled from blockchain.info)
 //
 var setupTicker = function (){
-    var mtgox = {};
-    var mtgox    = require('mtgox-orderbook');
-	mtgox.on('ticker', function(ticker){
-		minerLog.goxData = ticker;
-		goxData.high = ticker.high.display_short;
-		goxData.low = ticker.low.display_short;
-		goxData.last = ticker.last.display_short;
-		goxData.last_num = ticker.last.value;
+	var url = 'http://blockchain.info/ticker';
+	request({url:url}, function (error, response, body) {
+		try{
+		    
+			body = JSON.parse(body);
+			blockchainData = body["USD"];
+			minerLog.priceData = body;
+			//
+		} catch (e) {
+			rateData = {"ERROR":"error parsing blockchain json"};
+
+		}
+		
 	});
-	mtgox.connect('usd');	
-	mtgox.on('disconnect', function(){
-		mtgox.connect('usd');	
-	});	
 } 
 
 ////////////////////////////////////////////////////////
@@ -68,8 +69,8 @@ var calcRate = function	(hashrate) {
 			minerLog.rate = body;
 			//
 	        rateData.coins_per_day = (body.coins_per_hour * 24).toFixed(6);
-	        rateData.dollars_per_day = '$'+(rateData.coins_per_day * goxData.last_num).toFixed(2);
-			rateData.total_earned = '$'+(goxData.last_num * btcGuild.total).toFixed(2);
+	        rateData.dollars_per_day = '$'+(rateData.coins_per_day * blockchainData.last).toFixed(2);
+			rateData.total_earned = '$'+(blockchainData.last * btcGuild.total).toFixed(2);
 			//storing complete json to sync to log
 			minerLog.rateData = rateData;	
 			//
@@ -143,9 +144,8 @@ var refresh = function (){
 	console.log('earned: '+btcGuild.total+' BTC');
 	//terminal.colorize('%3');
 	console.log('---------------------------');
-	console.log("price per coin: "+ goxData.last);
+	console.log("price per coin: "+ blockchainData.last);
 	//terminal.colorize('%0');
-	             
 	console.log(rateData.dollars_per_day+"/day, "+rateData.total_earned+" total");
 };
 ////////////////////////////////////////////////////////
@@ -154,7 +154,7 @@ var refresh = function (){
 setupTicker();
 refresh();
 btcGUpdate();
-setInterval(setupTicker,1*HOUR);
+setInterval(setupTicker,1*SEC);
 setInterval(btcGUpdate,45*SEC);
 setInterval(refresh,10*SEC);
 setInterval(pushLog,5*MIN);//logs every five min
